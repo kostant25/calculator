@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -53,7 +52,7 @@ func read() (o1 int, o2 int, op string, flag bool) {
 	reader := bufio.NewReader(os.Stdin)
 	line, err := reader.ReadString('\n')
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	expression := strings.Split(strings.Trim(line, "\n"), " ")
@@ -66,15 +65,14 @@ func read() (o1 int, o2 int, op string, flag bool) {
 	o2, flag2 = parseToInt(expression[2])
 	op = expression[1]
 
-	if o1 < 1 && o1 > 10 && o2 < 1 && o2 > 10 {
+	if o1 < 1 || o1 > 10 || o2 < 1 || o2 > 10 {
 		panic(errors.New("Operands must be between 1 and 10"))
 	}
 
 	if flag1 == flag2 {
 		flag = flag1
 	} else {
-		err := errors.New("Different numeric alphavit")
-		log.Fatal(err)
+		panic(errors.New("Operands must be one notation "))
 	}
 
 	return
@@ -85,7 +83,7 @@ func parseToInt(s string) (int, bool) {
 	num, err := strconv.Atoi(s)
 	if err != nil {
 		flag = true
-		num = romeToArabic(s)
+		num = romeToArabic(strings.ToUpper(s))
 	}
 	return num, flag
 }
@@ -113,6 +111,8 @@ func romeToArabic(str string) (num int) {
 			} else {
 				num += 10
 			}
+		default:
+			panic(errors.New("Unknown notation"))
 		}
 	}
 	return
